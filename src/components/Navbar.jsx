@@ -1,17 +1,108 @@
 import React from "react";
 import { FaBitcoin } from "react-icons/fa";
+import { useState } from "react";
+import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const [nav, setNav] = useState(false);
+
+  const handleNav = () => {
+    setNav(!nav);
+  };
+
   return (
-    <>
-      <div className="max-w-screen max-h-screen grid grid-cols-5 bg-white text-[#364152] dark:bg-[#0F1624] dark:text-white">
-        <nav className="h-screen p-5 bg-white text-[#364152] dark:bg-[#0F1624] dark:text-white grid-cols-1 border-r-1 border-gray-600">
-          <FaBitcoin className="fill-[#615FFF] w-10 h-10" />
-        </nav>
-        <nav></nav>
+    <nav className="bg-slate-800 shadow-lg flex items-center justify-between py-3 px-4 mx-auto fixed top-0 left-0 w-full">
+      <Link to="/">
+        <span className="font-semibold text-lg flex items-center gap-3 text-blue-400">
+          <FaBitcoin className="text-5xl" />
+          <span>Financial Dashboard</span>
+        </span>
+      </Link>
+
+      <div onClick={handleNav} className="block md:hidden">
+        <AiOutlineMenu size={20} className="text-white" />
       </div>
-    </>
+
+      {/* SIDE MENU */}
+      <div
+        className={
+          nav
+            ? "fixed right-0 top-0 w-[200px] h-full border-r border-l-gray-900 bg-slate-800 ease-in-out duration-500 px-3 py-3"
+            : "fixed right-[-100%] top-0 w-[200px] h-full border-r border-l-gray-900 bg-slate-800 ease-in-out duration-500 px-3 py-3"
+        }
+      >
+        <div className="flex flex-col items-end gap-5 text-right">
+          <Link
+            to="/"
+            className="py-3 px-3 w-full text-lg font-light text-white hover:text-sky-300
+      rounded-2xl hover:bg-slate-700 transition duration-300"
+          >
+            Home
+          </Link>
+          <Link
+            to="/about"
+            className="py-3 px-3 w-full text-lg font-light text-white hover:text-sky-300
+      rounded-2xl hover:bg-slate-700 transition duration-300"
+          >
+            Coins
+          </Link>
+          <Link
+            to="/contact"
+            className="py-3 px-3 w-full text-lg font-light text-white hover:text-sky-300
+      rounded-2xl hover:bg-slate-700 transition duration-300"
+          >
+            Track
+          </Link>
+          <Link
+            to="/products"
+            className="py-3 px-3 w-full text-lg font-light text-white hover:text-sky-300
+      rounded-2xl hover:bg-slate-700 transition duration-300"
+          >
+            Settings
+          </Link>
+          <div
+            onClick={handleNav}
+            className="py-3 px-3 w-full text-lg font-light text-white hover:text-sky-300 
+      rounded-2xl hover:bg-slate-700 tansition duration-300 cursor-pointer"
+          >
+            Close
+          </div>
+        </div>
+      </div>
+
+      {/* REGULAR */}
+      <div className={nav ? "hidden" : "hidden md:flex items-center gap-5"}>
+        <Link
+          to="/"
+          className="py-3 px-3 text-lg font-light text-white hover:text-sky-300
+      rounded-2xl hover:bg-slate-700 transition duration-300"
+        >
+          Home
+        </Link>
+        <Link
+          to="/about"
+          className="py-3 px-3 text-lg font-light text-white hover:text-sky-300
+      rounded-2xl hover:bg-slate-700 transition duration-300"
+        >
+          Coins
+        </Link>
+        <Link
+          to="/contact"
+          className="py-3 px-3 text-lg font-light text-white hover:text-sky-300
+      rounded-2xl hover:bg-slate-700 transition duration-300"
+        >
+          Track
+        </Link>
+        <Link
+          to="/products"
+          className="py-3 px-3 text-lg font-light text-white hover:text-sky-300
+      rounded-2xl hover:bg-slate-700 transition duration-300"
+        >
+          Settings
+        </Link>
+      </div>
+    </nav>
   );
 };
 
