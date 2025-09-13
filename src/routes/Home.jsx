@@ -3,6 +3,9 @@ import { FaGlobeAmericas } from "react-icons/fa";
 import Card from "../components/Card";
 import { useEffect, useState } from "react";
 
+const API_KEY = process.env.REACT_APP_API_KEY;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 const Home = () => {
   const [marketCapPrice, setMarketCapPrice] = useState(0);
 
