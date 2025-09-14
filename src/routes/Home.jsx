@@ -8,12 +8,34 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const Home = () => {
   const [marketCapPrice, setMarketCapPrice] = useState(0);
+  const [tradingVolume, setTradingVolume] = useState(0);
+  const [bitCoinDom, setBitcoinDom] = useState(0);
+  const [ethDom, setEthDom] = useState(0);
+  const [btcPercentChange, setBtcPercentChange] = useState(0);
+  const [ethPercentChange, setEthPercentChange] = useState(0);
+  const [marketCapPercentChange, setMarketCapPercentChange] = useState(0);
+
+  const cleanNumbers = (number) => {
+    const num = Number(number);
+    if (num >= 1e12) {
+      return (num / 1e12).toFixed(2) + "T";
+    } else if (num >= 1e9) {
+      return (num / 1e9).toFixed(2) + "B";
+    } else if (num >= 1e6) {
+      return (num / 1e6).toFixed(2) + "M";
+    } else {
+      return num.toLocaleString();
+    }
+  };
 
   /*
   useEffect(() => {
-    const fetchCap = async () => {
+    const fetchCoinData = async () => {
       try {
         let totalMarketCap = 0;
+        let dayTradingVolume = 0;
+        let btcMarketDominance = 0;
+        let ethMarketDominance = 0;
         const response = await fetch(`${BASE_URL}/assets?limit=200`, {
           headers: {
             Authorization: `Bearer ${API_KEY}`,
@@ -22,13 +44,21 @@ const Home = () => {
         const coins = await response.json();
         coins.data.forEach((data) => {
           totalMarketCap += Number(data.marketCapUsd);
+          dayTradingVolume += Number(data.volumeUsd24hr);
         });
         setMarketCapPrice(totalMarketCap);
+        setTradingVolume(dayTradingVolume);
+        const btc = coins.data.find(data => data.id === "bitcoin");
+        const eth = coins.data.find(data => data.id === "ethereum");
+        btcMarketDominance = (Number(btc.marketCapUsd) / totalMarketCap) * 100;
+        ethMarketDominance = (Number(eth.marketCapUsd) / totalMarketCap) * 100;
+        setBitcoinDom(btcMarketDominance);
+        setEthDom(ethMarketDominance);
       } catch (error) {
         console.log("There was an error fetching the data: ", error);
       }
     };
-    fetchCap();
+    fetchCoinData();
   }, []);
   */
 
@@ -41,7 +71,11 @@ const Home = () => {
         <div className="flex flex-wrap gap-5 justify-center">
           <Card
             cardName="DummyCard"
-            value={marketCapPrice == 0 ? "No data available" : marketCapPrice}
+            value={
+              marketCapPrice == 0
+                ? "No data available"
+                : cleanNumbers(marketCapPrice)
+            }
             trend="+3.4%"
             trendDirection={null}
             icon={<FaGlobeAmericas className="text-slate-800 text-2xl" />}
