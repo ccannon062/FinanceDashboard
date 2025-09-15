@@ -1,5 +1,5 @@
 import React from "react";
-import { FaGlobeAmericas } from "react-icons/fa";
+import { FaGlobeAmericas, FaBitcoin, FaEthereum } from "react-icons/fa";
 import Card from "../components/Card";
 import { useEffect, useState } from "react";
 
@@ -13,6 +13,8 @@ const Home = () => {
   const [ethDom, setEthDom] = useState(0);
   const [btcPercentChange, setBtcPercentChange] = useState(0);
   const [ethPercentChange, setEthPercentChange] = useState(0);
+
+  //May need to find a different stat...
   const [marketCapPercentChange, setMarketCapPercentChange] = useState(0);
 
   const cleanNumbers = (number) => {
@@ -24,11 +26,22 @@ const Home = () => {
     } else if (num >= 1e6) {
       return (num / 1e6).toFixed(2) + "M";
     } else {
-      return num.toLocaleString();
+      return num.toFixed(2).toString();
     }
   };
 
-  /*
+  const calculatePercentChange = (data) => {
+    if (!data.data || data.data.length === 0) {
+      return 0;
+    }
+    return (
+      ((Number(data.data[data.data.length - 1].priceUsd) -
+        Number(data.data[0].priceUsd)) /
+        Number(data.data[0].priceUsd)) *
+      100
+    );
+  };
+
   useEffect(() => {
     const fetchCoinData = async () => {
       try {
@@ -48,8 +61,8 @@ const Home = () => {
         });
         setMarketCapPrice(totalMarketCap);
         setTradingVolume(dayTradingVolume);
-        const btc = coins.data.find(data => data.id === "bitcoin");
-        const eth = coins.data.find(data => data.id === "ethereum");
+        const btc = coins.data.find((data) => data.id === "bitcoin");
+        const eth = coins.data.find((data) => data.id === "ethereum");
         btcMarketDominance = (Number(btc.marketCapUsd) / totalMarketCap) * 100;
         ethMarketDominance = (Number(eth.marketCapUsd) / totalMarketCap) * 100;
         setBitcoinDom(btcMarketDominance);
@@ -60,7 +73,48 @@ const Home = () => {
     };
     fetchCoinData();
   }, []);
-  */
+
+  useEffect(() => {
+    const fetchCoinHist = async () => {
+      try {
+        let btcPercentChange = 0;
+        let ethPercentChange = 0;
+        const response = await Promise.all([
+          fetch(
+            `${BASE_URL}/assets/bitcoin/history?interval=h1&start=${
+              Date.now() - 86400000
+            }&end=${Date.now()}`,
+            {
+              headers: {
+                Authorization: `Bearer ${API_KEY}`,
+              },
+            }
+          ),
+          fetch(
+            `${BASE_URL}/assets/ethereum/history?interval=h1&start=${
+              Date.now() - 86400000
+            }&end=${Date.now()}`,
+            {
+              headers: {
+                Authorization: `Bearer ${API_KEY}`,
+              },
+            }
+          ),
+        ]);
+        const [btcData, ethData] = await Promise.all([
+          response[0].json(),
+          response[1].json(),
+        ]);
+        btcPercentChange = calculatePercentChange(btcData);
+        ethPercentChange = calculatePercentChange(ethData);
+        setBtcPercentChange(btcPercentChange);
+        setEthPercentChange(ethPercentChange);
+      } catch (error) {
+        console.log("There was an error fetching the data: ", error);
+      }
+    };
+    fetchCoinHist();
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-200 w-full flex items-center justify-center px-3">
@@ -70,26 +124,34 @@ const Home = () => {
         </h1>
         <div className="flex flex-wrap gap-5 justify-center">
           <Card
-            cardName="DummyCard"
+            cardName="Total Market Cap (USD)"
             value={
               marketCapPrice == 0
                 ? "No data available"
                 : cleanNumbers(marketCapPrice)
             }
-            trend="+3.4%"
-            trendDirection={null}
             icon={<FaGlobeAmericas className="text-slate-800 text-2xl" />}
           />
           <Card
-            cardName="DummyCard"
-            value="$2.15T"
-            trend="+3.4%"
-            trendDirection={null}
+            cardName="24h Trading Volume"
+            value={
+              tradingVolume == 0
+                ? "No data available"
+                : cleanNumbers(tradingVolume)
+            }
             icon={<FaGlobeAmericas className="text-slate-800 text-2xl" />}
           />
           <div className="flex gap-5 md:flex-col md:gap-2 items-center">
-            <Card cardName="DummyCard" value="$2.15T" />
-            <Card cardName="DummyCard" value="$2.15T" />
+            <Card
+              cardName="BTC Dominance"
+              value={cleanNumbers(bitCoinDom) + "%"}
+              icon={<FaBitcoin />}
+            />
+            <Card
+              cardName="ETH Dominance"
+              value={cleanNumbers(ethDom) + "%"}
+              icon={<FaEthereum />}
+            />
           </div>
         </div>
       </div>
