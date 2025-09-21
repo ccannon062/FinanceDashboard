@@ -88,6 +88,7 @@ const Home = () => {
     fetchCoinData();
   }, []);
 
+  /*
   useEffect(() => {
     const fetchCoinHist = async () => {
       try {
@@ -129,6 +130,7 @@ const Home = () => {
     };
     fetchCoinHist();
   }, []);
+  */
 
   const loadSettings = <PulseLoader size={10} />;
 
