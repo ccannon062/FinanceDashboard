@@ -48,6 +48,7 @@ const Home = () => {
     );
   };
 
+  /*
   useEffect(() => {
     const fetchCoinData = async () => {
       try {
@@ -88,7 +89,6 @@ const Home = () => {
     fetchCoinData();
   }, []);
 
-  /*
   useEffect(() => {
     const fetchCoinHist = async () => {
       try {
