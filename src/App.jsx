@@ -1,5 +1,6 @@
 import "./index.css";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import Home from "./routes/Home";
 import Coins from "./routes/Coins";
 import Track from "./routes/Track";
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/track" elements={<Track />} />
           <Route path="/settings" elements={<Settings />} />
         </Routes>
+        <Footer />
       </div>
     </>
   );
