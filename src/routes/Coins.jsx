@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
+import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
 import { data } from "react-router";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
@@ -11,6 +12,10 @@ const Coins = () => {
   const [coinList, setCoinList] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCoin, setSelectedCoin] = useState(null);
+  const [coinHistory, setCoinHistory] = useState([]);
+  const [histLoading, setHistLoading] = useState(false);
+  //Could use histLoading for loading screen in future but I'm fine with current implementation. Too lazy.
 
   const fetchCoins = async () => {
     try {
@@ -28,10 +33,6 @@ const Coins = () => {
     }
   };
 
-  useEffect(() => {
-    fetchCoins();
-  }, []);
-
   const filteredData = coinList?.filter((input) =>
     `${input.name}`.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -40,12 +41,44 @@ const Coins = () => {
     setSearchQuery("");
   };
 
+  const handleCoinClick = async (coin) => {
+    setSelectedCoin(coin);
+    setHistLoading(true);
+    clearSearch();
+    try {
+      const response = await fetch(
+        `${BASE_URL}/assets/${coin.id}/history?interval=d1`,
+        {
+          headers: {
+            Authorization: `Bearer ${API_KEY}`,
+          },
+        }
+      );
+      const history = await response.json();
+      setCoinHistory(history.data);
+    } catch (error) {
+      console.log("There was an error retrieving your data: ", error);
+    } finally {
+      setHistLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCoins();
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-200 w-full flex flex-col items-center px-5 py-5">
       <h1 className="text-5xl font-bold text-slate-800 text-center mt-20 mb-10">
         Search Coins
       </h1>
-      <div className="flex items-center border-gray-300 border-2 rounded-md shadow-2xl p-2 gap-2 bg-white w-[50%]">
+      <div
+        className={
+          searchQuery.length == 0
+            ? "flex items-center border-gray-300 border-2 rounded-md shadow-2xl p-2 gap-2 bg-white w-[50%] mb-10"
+            : "flex items-center border-gray-300 border-2 rounded-md shadow-2xl p-2 gap-2 bg-white w-[50%]"
+        }
+      >
         <FaSearch className="text-slate-600" />
         <input
           className="border-none bg-white outline-none w-full"
@@ -61,7 +94,7 @@ const Coins = () => {
         />
       </div>
       {searchQuery.length > 0 && (
-        <div className="max-h-[300px] overflow-auto flex flex-col p-2 bg-white shadow-2xl w-[50%]">
+        <div className="max-h-[300px] overflow-auto flex flex-col p-2 bg-white shadow-2xl w-[50%] mb-10">
           {isLoading ? (
             <div className="p-4 text-center text-slate-500">Searching...</div>
           ) : filteredData.length !== 0 ? (
@@ -69,6 +102,7 @@ const Coins = () => {
               <div
                 key={coin.id}
                 className="flex items-center justify-between p-3 hover:bg-slate-50 cursor-pointer border-b last:border-b-0"
+                onClick={() => handleCoinClick(coin)}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center">
@@ -92,6 +126,70 @@ const Coins = () => {
               No data available.
             </div>
           )}
+        </div>
+      )}
+      {selectedCoin && (
+        <div className="bg-slate-800 p-10 rounded-2xl mb-5">
+          <h1 className="mt-10 mb-2 text-2xl font-semibold text-sky-600 ">
+            Price History
+          </h1>
+          <p className="text-white mb-5">{selectedCoin.name}</p>
+          <LineChart
+            width={600}
+            height={400}
+            data={coinHistory}
+            margin={{ top: 20, right: 25, left: 25, bottom: 5 }}
+          >
+            <XAxis
+              dataKey="date"
+              tickFormatter={(date) =>
+                new Date(date).toLocaleDateString("default", { month: "short" })
+              }
+              stroke="#94a3b8"
+              tick={{ fill: "#94a3b8" }}
+            />
+            <Line
+              dataKey="priceUsd"
+              dot={false}
+              stroke="#3b82f6"
+              strokeWidth={2}
+            />
+            <YAxis
+              label={{
+                value: "USD",
+                angle: -90,
+                offset: -15,
+                position: "insideLeft",
+                style: { fill: "#94a3b8" },
+              }}
+              stroke="#94a3b8"
+              tick={{ fill: "#94a3b8" }}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#1e293b",
+                border: "1px solid #475569",
+                borderRadius: "8px",
+                color: "#f1f5f9",
+              }}
+              labelStyle={{ color: "#94a3b8" }}
+              itemStyle={{ color: "#f1f5f9" }}
+              labelFormatter={(date) =>
+                new Date(date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+              }
+              formatter={(value) => [
+                `$${Number(value).toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}`,
+                "Price",
+              ]}
+            />
+          </LineChart>
         </div>
       )}
     </div>
