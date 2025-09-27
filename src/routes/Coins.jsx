@@ -63,6 +63,15 @@ const Coins = () => {
     }
   };
 
+  const handleTrackCoin = () => {
+    const watchlist = JSON.parse(localStorage.getItem("watchlist") || "[]");
+
+    if (!watchlist.includes(selectedCoin.id)) {
+      watchlist.push(selectedCoin.id);
+      localStorage.setItem("watchlist", JSON.stringify(watchlist));
+    }
+  };
+
   useEffect(() => {
     fetchCoins();
   }, []);
@@ -133,7 +142,17 @@ const Coins = () => {
           <h1 className="mt-10 mb-2 text-2xl font-semibold text-sky-600 ">
             Price History
           </h1>
-          <p className="text-white mb-5">{selectedCoin.name}</p>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-white">
+              {selectedCoin.name}
+            </h2>
+            <button
+              onClick={handleTrackCoin}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              Track
+            </button>
+          </div>
           <LineChart
             width={600}
             height={400}

@@ -15,8 +15,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/coins" element={<Coins />} />
-          <Route path="/track" elements={<Track />} />
-          <Route path="/settings" elements={<Settings />} />
+          <Route path="/track" element={<Track />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
         <Footer />
       </div>
