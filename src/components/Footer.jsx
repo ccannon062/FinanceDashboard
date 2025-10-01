@@ -37,12 +37,6 @@ const Footer = () => {
             >
               Track
             </Link>
-            <Link
-              to="/settings"
-              className="text-gray-300 hover:text-sky-300 transition duration-300 text-sm"
-            >
-              Settings
-            </Link>
           </div>
           <div className="flex gap-4">
             <FaInstagram

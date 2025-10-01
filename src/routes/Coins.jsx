@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
 import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
-import { data } from "react-router";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -15,7 +14,6 @@ const Coins = () => {
   const [selectedCoin, setSelectedCoin] = useState(null);
   const [coinHistory, setCoinHistory] = useState([]);
   const [histLoading, setHistLoading] = useState(false);
-  //Could use histLoading for loading screen in future but I'm fine with current implementation. Too lazy.
 
   const fetchCoins = async () => {
     try {

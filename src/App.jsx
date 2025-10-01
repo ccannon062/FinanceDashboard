@@ -4,7 +4,6 @@ import Footer from "./components/Footer";
 import Home from "./routes/Home";
 import Coins from "./routes/Coins";
 import Track from "./routes/Track";
-import Settings from "./routes/Settings";
 import { Routes, Route } from "react-router";
 
 export default function App() {
@@ -16,7 +15,6 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/coins" element={<Coins />} />
           <Route path="/track" element={<Track />} />
-          <Route path="/settings" element={<Settings />} />
         </Routes>
         <Footer />
       </div>

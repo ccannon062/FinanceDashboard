@@ -12,7 +12,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-slate-800 shadow-lg flex items-center justify-between py-3 px-4 mx-auto fixed top-0 left-0 w-full">
+    <nav className="bg-slate-800 shadow-lg flex items-center justify-between py-3 px-4 mx-auto fixed top-0 left-0 w-full z-50">
       <Link to="/">
         <span className="font-semibold text-lg flex items-center gap-3 text-blue-400">
           <FaBitcoin className="text-5xl" />
@@ -54,13 +54,6 @@ const Navbar = () => {
           >
             Track
           </Link>
-          <Link
-            to="/settings"
-            className="py-3 px-3 w-full text-lg font-light text-white hover:text-sky-300
-      rounded-2xl hover:bg-slate-700 transition duration-300"
-          >
-            Settings
-          </Link>
           <div
             onClick={handleNav}
             className="py-3 px-3 w-full text-lg font-light text-white hover:text-sky-300 
@@ -93,13 +86,6 @@ const Navbar = () => {
       rounded-2xl hover:bg-slate-700 transition duration-300"
         >
           Track
-        </Link>
-        <Link
-          to="/settings"
-          className="py-3 px-3 text-lg font-light text-white hover:text-sky-300
-      rounded-2xl hover:bg-slate-700 transition duration-300"
-        >
-          Settings
         </Link>
       </div>
     </nav>
