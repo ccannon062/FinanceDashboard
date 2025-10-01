@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { cleanNumbers } from "./utils/CleanNum";
+import { MdCancel } from "react-icons/md";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -45,8 +46,6 @@ const Track = () => {
     setTrackedCoins((prev) => prev.filter((coin) => coin.id !== coinId));
   };
 
-  if (isLoading) return <div>Loading...</div>;
-
   if (trackedCoins.length === 0) {
     return (
       <div className="min-h-screen bg-slate-200 flex items-center justify-center">
@@ -55,7 +54,9 @@ const Track = () => {
     );
   }
 
-  return (
+  return isLoading ? (
+    <div>Loading...</div>
+  ) : (
     <div className="min-h-screen bg-slate-200 p-5 flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold text-slate-800 text-center my-10">
         Tracked Coins
@@ -68,6 +69,7 @@ const Track = () => {
             <th className="text-left p-4">Price</th>
             <th className="text-left p-4">24h Change</th>
             <th className="text-left p-4">Market Cap</th>
+            <th className="text-left p-4">Remove</th>
           </tr>
         </thead>
         <tbody>
@@ -88,6 +90,14 @@ const Track = () => {
               </td>
               <td className="p-4 text-left">
                 {cleanNumbers(coin.marketCapUsd)}
+              </td>
+              <td>
+                <button onClick={() => handleRemoveFromTrack(coin.id)}>
+                  <MdCancel
+                    className="text-red-500 hover:text-red-700 text-right"
+                    size={20}
+                  />
+                </button>
               </td>
             </tr>
           ))}
