@@ -3,6 +3,7 @@ import { FaGlobeAmericas, FaBitcoin, FaEthereum } from "react-icons/fa";
 import Card from "../components/Card";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
+import { cleanNumbers } from "./utils/CleanNum";
 
 /* CREDIT FOR USED COMPONENTS
 
@@ -23,19 +24,6 @@ const Home = () => {
   const [ethPercentChange, setEthPercentChange] = useState(0);
   const [topCoins, setTopCoins] = useState([]);
 
-  const cleanNumbers = (number) => {
-    const num = Number(number);
-    if (num >= 1e12) {
-      return (num / 1e12).toFixed(2) + " T";
-    } else if (num >= 1e9) {
-      return (num / 1e9).toFixed(2) + " B";
-    } else if (num >= 1e6) {
-      return (num / 1e6).toFixed(2) + " M";
-    } else {
-      return num.toFixed(2).toString();
-    }
-  };
-
   const calculatePercentChange = (data) => {
     if (!data.data || data.data.length === 0) {
       return 0;
@@ -48,7 +36,6 @@ const Home = () => {
     );
   };
 
-  /*
   useEffect(() => {
     const fetchCoinData = async () => {
       try {
@@ -130,7 +117,6 @@ const Home = () => {
     };
     fetchCoinHist();
   }, []);
-  */
 
   const loadSettings = <PulseLoader size={10} />;
 
