@@ -2,7 +2,14 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
-import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -136,7 +143,7 @@ const Coins = () => {
         </div>
       )}
       {selectedCoin && (
-        <div className="bg-slate-800 p-10 rounded-2xl mb-5">
+        <div className="bg-slate-800 p-4 sm:p-6 md:p-10 rounded-2xl mb-5 w-full sm:w-[80%] md:w-[70%] lg:w-[50%]">
           <h1 className="mt-10 mb-2 text-2xl font-semibold text-sky-600 ">
             Price History
           </h1>
@@ -151,62 +158,66 @@ const Coins = () => {
               Track
             </button>
           </div>
-          <LineChart
-            width={600}
-            height={400}
-            data={coinHistory}
-            margin={{ top: 20, right: 25, left: 25, bottom: 5 }}
-          >
-            <XAxis
-              dataKey="date"
-              tickFormatter={(date) =>
-                new Date(date).toLocaleDateString("default", { month: "short" })
-              }
-              stroke="#94a3b8"
-              tick={{ fill: "#94a3b8" }}
-            />
-            <Line
-              dataKey="priceUsd"
-              dot={false}
-              stroke="#3b82f6"
-              strokeWidth={2}
-            />
-            <YAxis
-              label={{
-                value: "USD",
-                angle: -90,
-                offset: -15,
-                position: "insideLeft",
-                style: { fill: "#94a3b8" },
-              }}
-              stroke="#94a3b8"
-              tick={{ fill: "#94a3b8" }}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#1e293b",
-                border: "1px solid #475569",
-                borderRadius: "8px",
-                color: "#f1f5f9",
-              }}
-              labelStyle={{ color: "#94a3b8" }}
-              itemStyle={{ color: "#f1f5f9" }}
-              labelFormatter={(date) =>
-                new Date(date).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })
-              }
-              formatter={(value) => [
-                `$${Number(value).toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}`,
-                "Price",
-              ]}
-            />
-          </LineChart>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart
+              width={600}
+              height={400}
+              data={coinHistory}
+              margin={{ top: 20, right: 25, left: 25, bottom: 5 }}
+            >
+              <XAxis
+                dataKey="date"
+                tickFormatter={(date) =>
+                  new Date(date).toLocaleDateString("default", {
+                    month: "short",
+                  })
+                }
+                stroke="#94a3b8"
+                tick={{ fill: "#94a3b8" }}
+              />
+              <Line
+                dataKey="priceUsd"
+                dot={false}
+                stroke="#3b82f6"
+                strokeWidth={2}
+              />
+              <YAxis
+                label={{
+                  value: "USD",
+                  angle: -90,
+                  offset: -15,
+                  position: "insideLeft",
+                  style: { fill: "#94a3b8" },
+                }}
+                stroke="#94a3b8"
+                tick={{ fill: "#94a3b8" }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#1e293b",
+                  border: "1px solid #475569",
+                  borderRadius: "8px",
+                  color: "#f1f5f9",
+                }}
+                labelStyle={{ color: "#94a3b8" }}
+                itemStyle={{ color: "#f1f5f9" }}
+                labelFormatter={(date) =>
+                  new Date(date).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })
+                }
+                formatter={(value) => [
+                  `$${Number(value).toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}`,
+                  "Price",
+                ]}
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       )}
     </div>

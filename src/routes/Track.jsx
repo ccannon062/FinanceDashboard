@@ -61,48 +61,54 @@ const Track = () => {
       <h1 className="text-4xl font-bold text-slate-800 text-center my-10">
         Tracked Coins
       </h1>
-      <table className="w-[50%] h-[50%] bg-white text-sm text-left rtl:text-right text-slate-600">
-        <thead>
-          <tr className="bg-slate-100 font-bold">
-            <th className="text-left p-4">Symbol</th>
-            <th className="text-left p-4">Name</th>
-            <th className="text-left p-4">Price</th>
-            <th className="text-left p-4">24h Change</th>
-            <th className="text-left p-4">Market Cap</th>
-            <th className="text-left p-4">Remove</th>
-          </tr>
-        </thead>
-        <tbody>
-          {trackedCoins.map((coin) => (
-            <tr
-              key={crypto.randomUUID()}
-              className="border-b hover:bg-slate-50"
-            >
-              <td className="p-4 font-semibold">{coin.symbol}</td>
-              <td className="p-4">{coin.name}</td>
-              <td className="p-4 text-left">${cleanNumbers(coin.priceUsd)}</td>
-              <td
-                className={`p-4 text-left ${
-                  coin.changePercent24Hr > 0 ? "text-green-500" : "text-red-500"
-                }`}
-              >
-                {Number(coin.changePercent24Hr).toFixed(2)}%
-              </td>
-              <td className="p-4 text-left">
-                {cleanNumbers(coin.marketCapUsd)}
-              </td>
-              <td>
-                <button onClick={() => handleRemoveFromTrack(coin.id)}>
-                  <MdCancel
-                    className="text-red-500 hover:text-red-700 text-right"
-                    size={20}
-                  />
-                </button>
-              </td>
+      <div className="w-full max-w-5xl overflow-x-auto flex items-center justify-center">
+        <table className="bg-white text-sm text-left rtl:text-right text-slate-600">
+          <thead>
+            <tr className="bg-slate-100 font-bold">
+              <th className="text-left p-4">Symbol</th>
+              <th className="text-left p-4">Name</th>
+              <th className="text-left p-4">Price</th>
+              <th className="text-left p-4">24h Change</th>
+              <th className="text-left p-4">Market Cap</th>
+              <th className="text-left p-4">Remove</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {trackedCoins.map((coin) => (
+              <tr
+                key={crypto.randomUUID()}
+                className="border-b hover:bg-slate-50"
+              >
+                <td className="p-4 font-semibold">{coin.symbol}</td>
+                <td className="p-4">{coin.name}</td>
+                <td className="p-4 text-left">
+                  ${cleanNumbers(coin.priceUsd)}
+                </td>
+                <td
+                  className={`p-4 text-left ${
+                    coin.changePercent24Hr > 0
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
+                  {Number(coin.changePercent24Hr).toFixed(2)}%
+                </td>
+                <td className="p-4 text-left">
+                  {cleanNumbers(coin.marketCapUsd)}
+                </td>
+                <td>
+                  <button onClick={() => handleRemoveFromTrack(coin.id)}>
+                    <MdCancel
+                      className="text-red-500 hover:text-red-700 text-right"
+                      size={20}
+                    />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
